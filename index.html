@@ -58,7 +58,7 @@
             maxZoom: 5,
             center: [0, 0],
             zoom: 3,
-            layers: [AtlasStyle, ExampleGroup] // Default style + overlay
+            layers: [AtlasStyle, ExampleGroup]
         });
 
         L.control.layers(baseMaps, overlayMaps).addTo(mymap);
@@ -72,6 +72,7 @@
             });
         }
 
+        // Initial marker from URL params (optional)
         const params = new URLSearchParams(window.location.search);
         const x = parseFloat(params.get('x')) || 0;
         const y = parseFloat(params.get('y')) || 0;
@@ -81,6 +82,15 @@
             .bindPopup("I am here.");
 
         mymap.setView([y, x], 4);
+
+        // ✅ Runtime injection function from VB.NET
+        window.addHydrantMarkers = function(hydrants) {
+            for (const h of hydrants) {
+                L.marker([h.y, h.x], { icon: customIcon(1) })
+                    .addTo(ExampleGroup)
+                    .bindPopup(`Hydrant at [${h.x.toFixed(2)}, ${h.y.toFixed(2)}]`);
+            }
+        };
     </script>
 </body>
 </html>
